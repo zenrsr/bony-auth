@@ -3,9 +3,7 @@ import {Component} from 'react'
 import Cookies from 'js-cookie'
 
 class Login extends Component {
-  componentDidMount() {
-    this.credLogin()
-  }
+  state = {username: 'rahul', password: 'rahul@2021'}
 
   onSubmitSuccess = jwtToken => {
     const {history} = this.props
@@ -18,9 +16,12 @@ class Login extends Component {
   }
 
   credLogin = async () => {
+    const {username, password} = this.state
+    const userDetails = {username, password}
     const api = 'https://apis.ccbp.in/login'
     const options = {
       method: 'POST',
+      body: JSON.stringify(userDetails),
     }
     const response = await fetch(api, options)
     const data = await response.json()
