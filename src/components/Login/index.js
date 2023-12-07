@@ -1,9 +1,10 @@
 import './index.css'
 import {Component} from 'react'
 import Cookies from 'js-cookie'
+import {Redirect} from 'react-router-dom'
 
 class Login extends Component {
-  state = {username: 'rahul', password: 'rahul@2021'}
+  state = {error: ''}
 
   onSubmitSuccess = jwtToken => {
     const {history} = this.props
@@ -12,11 +13,12 @@ class Login extends Component {
   }
 
   onSubmitFailure = errorMsg => {
-    console.log(errorMsg)
+    this.setState({error: errorMsg})
   }
 
   credLogin = async () => {
-    const {username, password} = this.state
+    const username = 'rahul'
+    const password = 'rahul@2021'
     const userDetails = {username, password}
     const api = 'https://apis.ccbp.in/login'
     const options = {
@@ -36,9 +38,17 @@ class Login extends Component {
   }
 
   render() {
+    const jwtToken = Cookies.get('jwt_token')
+    const {error} = this.state
+
+    if (jwtToken !== undefined) {
+      return <Redirect to="/" />
+    }
+
     return (
       <div className="container">
         <h1>Please Login</h1>
+        {error && <p className="error-message">{error}</p>}
         <button type="button" onClick={this.credLogin}>
           Login with Sample Creds
         </button>
